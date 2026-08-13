@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>South Texas Builders — Design Deposit Agreement</title>
+<!--
+  ============================================================================
+  SOUTH TEXAS BUILDERS — DESIGN & BLUEPRINT DEPOSIT AGREEMENT (e-signature)
+  ----------------------------------------------------------------------------
+  Standalone page. No build step, no dependencies. Opened in a new tab from
+  the "Let's Begin" section of the closer presentation.
+
+  Captures: client identity, explicit acknowledgment of the non-refundable
+  $5,000 design deposit, a drawn signature, a typed legal name, and a
+  timestamped audit record. Submits to Netlify Forms (form name
+  "stb-deposit-agreement") so the office receives a copy, then generates a
+  printable / save-as-PDF signed agreement.
+
+  NOTE: Have counsel review the agreement wording before production use.
+  ============================================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --navy:#0f1f3d; --navy-soft:#1B3A5C; --red:#b5291e; --cream:#f5f0e8;
+    --panel:#fff; --line:#e6e1d8; --muted:#8a8a8a; --ink:#1a1a1a; --ok:#1e7a4d;
+  }
+  body{
+    font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--cream);
+    color:var(--ink);line-height:1.6;padding:24px 16px 64px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:780px;margin:0 auto}
+
+  /* ---------- header ---------- */
+  .doc{background:var(--panel);border-radius:14px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+  .doc-head{background:var(--navy);padding:22px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  .logo{font-size:17px;font-weight:800;color:#fff;letter-spacing:.04em}
+  .logo span{color:var(--red)}
+  .head-right{display:flex;align-items:center;gap:14px}
+  .head-title{text-align:right}
+  .head-title h1{font-size:14px;font-weight:700;color:#fff;line-height:1.3}
+  .head-title p{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}
+  .lang-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;
+    font:inherit;font-size:12px;font-weight:600;padding:7px 12px;border-radius:20px;cursor:pointer;white-space:nowrap}
+  .lang-btn:hover{background:rgba(255,255,255,.22)}
+
+  .doc-body{padding:28px}
+  @media (max-width:560px){.doc-body{padding:20px 16px}}
+
+  /* ---------- amount ---------- */
+  .amount{background:#f7f4ee;border:1px solid var(--line);border-radius:10px;padding:20px 24px;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+  .amount-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:2px}
+  .amount-val{font-size:38px;font-weight:800;color:var(--navy);letter-spacing:-.02em}
+  .amount-tag{font-size:12px;font-weight:600;color:var(--red);background:#f8ece9;border:1px solid #f0c0ba;
+    padding:5px 13px;border-radius:20px}
+
+  /* ---------- sections ---------- */
+  .sec{margin-bottom:28px}
+  .sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--navy);
+    padding-bottom:8px;border-bottom:2px solid var(--line);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  .sec-title .n{background:var(--navy);color:#fff;width:19px;height:19px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;font-size:10px;flex:none}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:560px){.grid{grid-template-columns:1fr}}
+  .full{grid-column:1/-1}
+  label.f{display:block}
+  .f-label{display:block;font-size:11px;font-weight:600;color:#555;margin-bottom:5px;letter-spacing:.02em}
+  .f-label .req{color:var(--red)}
+  input[type=text],input[type=tel],input[type=email]{
+    width:100%;font:inherit;font-size:14px;padding:11px 13px;border:1px solid var(--line);
+    border-radius:7px;background:#fdfcfa;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+  input:focus{outline:none;border-color:var(--navy-soft);box-shadow:0 0 0 3px rgba(27,58,92,.1);background:#fff}
+  input.err{border-color:var(--red);background:#fffafa}
+
+  /* ---------- terms ---------- */
+  .terms{background:#fbfaf7;border:1px solid var(--line);border-radius:10px;padding:20px 22px;font-size:13.5px;color:#3a3a3a}
+  .terms p{margin-bottom:12px}
+  .terms p:last-child{margin-bottom:0}
+  .terms strong{color:var(--ink)}
+  .terms .hot{color:var(--red);font-weight:700}
+  .terms ul{margin:10px 0 12px 20px}
+  .terms li{margin-bottom:6px}
+
+  /* ---------- checkboxes ---------- */
+  .ack{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);
+    border-radius:9px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s,background .15s}
+  .ack:hover{border-color:#c9c2b5}
+  .ack.checked{border-color:var(--ok);background:#f4fbf7}
+  .ack.err{border-color:var(--red);background:#fffafa}
+  .ack input{width:19px;height:19px;flex:none;margin-top:1px;accent-color:var(--ok);cursor:pointer}
+  .ack span{font-size:13px;color:#3a3a3a;line-height:1.55}
+  .ack span b{color:var(--ink)}
+
+  /* ---------- signature ---------- */
+  .sig-wrap{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+  .sig-bar{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;
+    background:#faf9f6;border-bottom:1px solid var(--line)}
+  .sig-hint{font-size:11px;color:var(--muted)}
+  .clear-btn{background:none;border:1px solid var(--line);color:#666;font:inherit;font-size:11px;
+    font-weight:600;padding:5px 11px;border-radius:6px;cursor:pointer}
+  .clear-btn:hover{border-color:var(--red);color:var(--red)}
+  canvas{display:block;width:100%;height:170px;touch-action:none;cursor:crosshair;background:#fff}
+  .sig-line{margin:0 14px 12px;border-top:1px dashed #cfc9bd;padding-top:7px;font-size:10.5px;
+    color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  .sig-wrap.err{border-color:var(--red)}
+
+  .cosign-toggle{margin-top:14px;font-size:13px;color:var(--navy-soft);font-weight:600;
+    background:none;border:none;font-family:inherit;cursor:pointer;text-decoration:underline;padding:4px 0}
+  #cosignBlock{margin-top:18px;padding-top:18px;border-top:1px dashed var(--line)}
+
+  /* ---------- submit ---------- */
+  .submit-btn{width:100%;background:var(--red);color:#fff;font:inherit;font-size:15px;font-weight:700;
+    border:none;border-radius:9px;padding:16px;cursor:pointer;letter-spacing:.02em;transition:background .15s}
+  .submit-btn:hover{background:#9c2119}
+  .submit-btn:disabled{background:#c9c2b5;cursor:not-allowed}
+  .err-msg{background:#fff2f0;border-left:4px solid var(--red);color:#8c2018;font-size:13px;
+    padding:12px 15px;border-radius:0 6px 6px 0;margin-bottom:16px;display:none}
+  .err-msg.show{display:block}
+  .legal-note{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.6}
+
+  .doc-foot{padding:18px 28px;background:#faf9f6;border-top:1px solid var(--line);
+    text-align:center;font-size:11px;color:#aaa;line-height:1.8}
+
+  /* ---------- success ---------- */
+  #done{display:none;text-align:center;padding:44px 28px}
+  #done .tick{width:64px;height:64px;border-radius:50%;background:#e8f6ee;color:var(--ok);
+    display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 20px}
+  #done h2{font-size:21px;color:var(--navy);margin-bottom:8px;font-weight:700}
+  #done p{font-size:14px;color:#666;margin-bottom:6px}
+  #done .docid{font-family:ui-monospace,monospace;font-size:12px;color:var(--muted);
+    background:#f5f2ec;padding:6px 12px;border-radius:6px;display:inline-block;margin:14px 0 22px}
+  .print-btn{background:var(--navy);color:#fff;font:inherit;font-size:14px;font-weight:700;border:none;
+    border-radius:9px;padding:14px 28px;cursor:pointer}
+  .print-btn:hover{background:#16305c}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="doc">
+    <div class="doc-head">
+      <div class="logo">SOUTH TEXAS <span>BUILDERS</span></div>
+      <div class="head-right">
+        <div class="head-title">
+          <h1 data-t="docTitle">Design &amp; Blueprint Deposit Agreement</h1>
+          <p id="todayLabel"></p>
+        </div>
+        <button class="lang-btn" id="langBtn" type="button">🇲🇽 Español</button>
+      </div>
+    </div>
+
+    <!-- ============ FORM ============ -->
+    <div class="doc-body" id="formView">
+
+      <div class="amount">
+        <div>
+          <div class="amount-label" data-t="depositAmount">Deposit Amount</div>
+          <div class="amount-val">$5,000</div>
+        </div>
+        <div class="amount-tag" data-t="creditedTag">Credited to Your Home at Closing</div>
+      </div>
+
+      <!-- 1. client -->
+      <div class="sec">
+        <div class="sec-title"><span class="n">1</span><span data-t="s1">Client Information</span></div>
+        <div class="grid">
+          <label class="f full">
+            <span class="f-label"><span data-t="fLegal">Full Legal Name</span> <span class="req">*</span></span>
+            <input type="text" id="legalName" autocomplete="name" placeholder="e.g. Carlos Reyes" />
+          </label>
+          <label class="f">
+            <span class="f-label"><span data-t="fPhone">Phone</span> <span class="req">*</span></span>
+            <input type="tel" id="phone" autocomplete="tel" placeholder="e.g. (956) 123-4567" />
+          </label>
+          <label class="f">
+            <span class="f-label"><span data-t="fEmail">Email</span> <span class="req">*</span></span>
+            <input type="email" id="email" autocomplete="email" placeholder="e.g. carlos@email.com" />
+          </label>
+          <label class="f full">
+            <span class="f-label" data-t="fProp">Property Address / Lot (if known)</span>
+            <input type="text" id="property" placeholder="e.g. Lot 14, Palm Grove, Alice TX" />
+          </label>
+          <label class="f">
+            <span class="f-label" data-t="fPkg">Selected Package</span>
+            <input type="text" id="package" placeholder="e.g. Fully Loaded — $120/sq ft" />
+          </label>
+          <label class="f">
+            <span class="f-label" data-t="fRep">Sales Representative</span>
+            <input type="text" id="rep" placeholder="e.g. Rolando Peña" />
+          </label>
+        </div>
+      </div>
+
+      <!-- 2. terms -->
+      <div class="sec">
+        <div class="sec-title"><span class="n">2</span><span data-t="s2">Deposit Terms</span></div>
+        <div class="terms" id="termsBox"></div>
+      </div>
+
+      <!-- 3. acknowledgments -->
+      <div class="sec">
+        <div class="sec-title"><span class="n">3</span><span data-t="s3">Acknowledgment</span></div>
+        <div id="ackList"></div>
+      </div>
+
+      <!-- 4. signature -->
+      <div class="sec">
+        <div class="sec-title"><span class="n">4</span><span data-t="s4">Signature</span></div>
+
+        <label class="f" style="margin-bottom:14px">
+          <span class="f-label"><span data-t="fType">Type your full legal name to sign</span> <span class="req">*</span></span>
+          <input type="text" id="typedSig" placeholder="Carlos Reyes" style="font-size:17px" />
+        </label>
+
+        <div class="sig-wrap" id="sigWrap">
+          <div class="sig-bar">
+            <span class="sig-hint" data-t="sigHint">Draw your signature below</span>
+            <button type="button" class="clear-btn" id="clearSig" data-t="clearSig">Clear</button>
+          </div>
+          <canvas id="sigPad"></canvas>
+          <div class="sig-line" data-t="sigLine">Client Signature</div>
+        </div>
+
+        <button type="button" class="cosign-toggle" id="cosignToggle" data-t="addCosign">+ Add co-signer (spouse / partner)</button>
+
+        <div id="cosignBlock" style="display:none">
+          <label class="f" style="margin-bottom:14px">
+            <span class="f-label" data-t="fCoName">Co-Signer Full Legal Name</span>
+            <input type="text" id="coName" placeholder="e.g. Maria Reyes" />
+          </label>
+          <div class="sig-wrap" id="coSigWrap">
+            <div class="sig-bar">
+              <span class="sig-hint" data-t="sigHint2">Co-signer draws signature below</span>
+              <button type="button" class="clear-btn" id="clearCoSig" data-t="clearSig2">Clear</button>
+            </div>
+            <canvas id="coSigPad"></canvas>
+            <div class="sig-line" data-t="coSigLine">Co-Signer Signature</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="err-msg" id="errMsg"></div>
+      <button type="button" class="submit-btn" id="submitBtn" data-t="submitBtn">✍️ Sign &amp; Generate Agreement</button>
+      <p class="legal-note" data-t="legalNote">
+        By signing you consent to use an electronic signature, which has the same legal effect as a handwritten signature.
+      </p>
+    </div>
+
+    <!-- ============ SUCCESS ============ -->
+    <div id="done">
+      <div class="tick">✓</div>
+      <h2 data-t="doneTitle">Agreement Signed</h2>
+      <p data-t="doneSub">A copy has been sent to South Texas Builders.</p>
+      <div class="docid" id="doneId"></div>
+      <div>
+        <button type="button" class="print-btn" id="printBtn" data-t="printBtn">🖨️ View / Download Signed PDF</button>
+      </div>
+      <p class="legal-note" style="margin-top:18px" data-t="doneNote">Keep a copy for your records.</p>
+    </div>
+
+    <div class="doc-foot">
+      South Texas Builders · 1500 Dove Ave W, Suite #20 · McAllen, TX 78504 · (956) 594-6936<br/>
+      <span data-t="footNote">This agreement confirms deposit terms. It does not constitute a final construction contract.</span>
+    </div>
+  </div>
+</div>
+
+<!-- Netlify Forms detection stub (static markup, never displayed) -->
+<form name="stb-deposit-agreement" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="text" name="bot-field" />
+  <input type="text" name="documentId" /><input type="text" name="legalName" />
+  <input type="text" name="phone" /><input type="email" name="email" />
+  <input type="text" name="property" /><input type="text" name="package" />
+  <input type="text" name="rep" /><input type="text" name="typedSignature" />
+  <input type="text" name="coSignerName" /><input type="text" name="signedAt" />
+  <input type="text" name="language" /><input type="text" name="acknowledgments" />
+  <input type="text" name="userAgent" /><textarea name="signatureImage"></textarea>
+  <textarea name="coSignatureImage"></textarea>
+</form>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ------------------------------------------------------------------ i18n */
+  var T = {
+    en:{
+      docTitle:"Design & Blueprint Deposit Agreement", depositAmount:"Deposit Amount",
+      creditedTag:"Credited to Your Home at Closing",
+      s1:"Client Information", s2:"Deposit Terms", s3:"Acknowledgment", s4:"Signature",
+      fLegal:"Full Legal Name", fPhone:"Phone", fEmail:"Email",
+      fProp:"Property Address / Lot (if known)", fPkg:"Selected Package", fRep:"Sales Representative",
+      fType:"Type your full legal name to sign", sigHint:"Draw your signature below",
+      sigHint2:"Co-signer draws signature below", clearSig:"Clear", clearSig2:"Clear",
+      sigLine:"Client Signature", coSigLine:"Co-Signer Signature",
+      addCosign:"+ Add co-signer (spouse / partner)", removeCosign:"− Remove co-signer",
+      fCoName:"Co-Signer Full Legal Name",
+      submitBtn:"✍️ Sign & Generate Agreement", submitting:"Submitting…",
+      legalNote:"By signing you consent to use an electronic signature, which has the same legal effect as a handwritten signature.",
+      doneTitle:"Agreement Signed", doneSub:"A copy has been sent to South Texas Builders.",
+      printBtn:"🖨️ View / Download Signed PDF", doneNote:"Keep a copy for your records.",
+      footNote:"This agreement confirms deposit terms. It does not constitute a final construction contract.",
+      errFields:"Please complete all required fields highlighted below.",
+      errAck:"You must check every acknowledgment box to continue.",
+      errSig:"Please draw your signature in the box above.",
+      errTyped:"Your typed name must match your full legal name.",
+      errSend:"Your agreement was signed, but the copy could not be sent automatically. Please download the PDF and email it to the office.",
+      /* document */
+      docHead:"Design & Blueprint Deposit Agreement", labClient:"Client", labPhone:"Phone",
+      labEmail:"Email", labProp:"Property", labPkg:"Package", labRep:"Sales Representative",
+      labDate:"Date Signed", labDoc:"Document ID", labBuilder:"Builder",
+      termsHead:"Terms Acknowledged & Agreed", sigHead:"Signatures",
+      signedBy:"Signed by", coSignedBy:"Co-signed by", onDate:"on",
+      auditHead:"Audit Record",
+      terms:{
+        intro:"This Design &amp; Blueprint Deposit Agreement (\"Agreement\") is entered into between <strong>South Texas Builders</strong> (\"Builder\") and the client identified above (\"Client\") on the date signed below.",
+        p1:"Client agrees to pay a <strong>$5,000 Design &amp; Blueprint Deposit</strong> to Builder in order to begin design work and reserve a position on Builder's construction calendar.",
+        p2:"<span class='hot'>THIS DEPOSIT IS NON-REFUNDABLE.</span> The deposit is not held in escrow. It is applied immediately upon receipt to cover work performed and costs incurred on Client's behalf, including but not limited to:",
+        li:["Architectural blueprint and drafting labor","Sales representative commission","Transaction coordinator fees and administrative processing"],
+        p3:"Because these costs are incurred and paid out by Builder as soon as work begins, <strong>the deposit will not be returned</strong> if Client chooses not to proceed with construction, for any reason.",
+        p4:"<strong>Credit at closing.</strong> If Client proceeds with construction, the full <strong>$5,000</strong> is credited 100% toward the purchase of Client's home through the construction loan at closing.",
+        p5:"This Agreement confirms the terms of the deposit only. It does not constitute a final construction contract, and does not obligate either party to a build price until a construction agreement is separately executed."
+      },
+      acks:[
+        "I understand the <b>$5,000 Design &amp; Blueprint Deposit is NON-REFUNDABLE</b> and will not be returned to me if I choose not to proceed.",
+        "I understand this deposit is used to pay for <b>blueprint and drafting labor, sales representative commission, and transaction coordinator fees</b> — costs incurred on my behalf as soon as work begins.",
+        "I understand that if I proceed with construction, the full <b>$5,000 will be credited toward my home</b> through the construction loan at closing.",
+        "I have read this Agreement in full, I am signing voluntarily, and I <b>consent to sign electronically</b>."
+      ]
+    },
+    es:{
+      docTitle:"Acuerdo de Depósito de Diseño y Planos", depositAmount:"Monto del Depósito",
+      creditedTag:"Acreditado a Tu Casa al Cierre",
+      s1:"Información del Cliente", s2:"Términos del Depósito", s3:"Reconocimiento", s4:"Firma",
+      fLegal:"Nombre Legal Completo", fPhone:"Teléfono", fEmail:"Correo Electrónico",
+      fProp:"Dirección / Lote de la Propiedad (si se conoce)", fPkg:"Paquete Seleccionado",
+      fRep:"Representante de Ventas",
+      fType:"Escribe tu nombre legal completo para firmar", sigHint:"Dibuja tu firma abajo",
+      sigHint2:"El co-firmante dibuja su firma abajo", clearSig:"Borrar", clearSig2:"Borrar",
+      sigLine:"Firma del Cliente", coSigLine:"Firma del Co-Firmante",
+      addCosign:"+ Agregar co-firmante (cónyuge / pareja)", removeCosign:"− Quitar co-firmante",
+      fCoName:"Nombre Legal Completo del Co-Firmante",
+      submitBtn:"✍️ Firmar y Generar Acuerdo", submitting:"Enviando…",
+      legalNote:"Al firmar aceptas usar una firma electrónica, la cual tiene el mismo efecto legal que una firma manuscrita.",
+      doneTitle:"Acuerdo Firmado", doneSub:"Se envió una copia a South Texas Builders.",
+      printBtn:"🖨️ Ver / Descargar PDF Firmado", doneNote:"Guarda una copia para tus registros.",
+      footNote:"Este acuerdo confirma los términos del depósito. No constituye un contrato de construcción final.",
+      errFields:"Por favor completa todos los campos requeridos marcados abajo.",
+      errAck:"Debes marcar todas las casillas de reconocimiento para continuar.",
+      errSig:"Por favor dibuja tu firma en el recuadro de arriba.",
+      errTyped:"Tu nombre escrito debe coincidir con tu nombre legal completo.",
+      errSend:"Tu acuerdo fue firmado, pero la copia no se pudo enviar automáticamente. Por favor descarga el PDF y envíalo por correo a la oficina.",
+      docHead:"Acuerdo de Depósito de Diseño y Planos", labClient:"Cliente", labPhone:"Teléfono",
+      labEmail:"Correo", labProp:"Propiedad", labPkg:"Paquete", labRep:"Representante de Ventas",
+      labDate:"Fecha de Firma", labDoc:"ID del Documento", labBuilder:"Constructor",
+      termsHead:"Términos Reconocidos y Aceptados", sigHead:"Firmas",
+      signedBy:"Firmado por", coSignedBy:"Co-firmado por", onDate:"el",
+      auditHead:"Registro de Auditoría",
+      terms:{
+        intro:"Este Acuerdo de Depósito de Diseño y Planos (\"Acuerdo\") se celebra entre <strong>South Texas Builders</strong> (\"Constructor\") y el cliente identificado arriba (\"Cliente\") en la fecha firmada a continuación.",
+        p1:"El Cliente acepta pagar un <strong>Depósito de Diseño y Planos de $5,000</strong> al Constructor para iniciar el trabajo de diseño y reservar un lugar en el calendario de construcción del Constructor.",
+        p2:"<span class='hot'>ESTE DEPÓSITO NO ES REEMBOLSABLE.</span> El depósito no se mantiene en garantía (escrow). Se aplica de inmediato al recibirse para cubrir el trabajo realizado y los costos incurridos en nombre del Cliente, incluyendo pero no limitado a:",
+        li:["Mano de obra de planos arquitectónicos y dibujo","Comisión del representante de ventas","Honorarios de la coordinadora de transacciones y procesamiento administrativo"],
+        p3:"Debido a que estos costos son incurridos y pagados por el Constructor tan pronto como comienza el trabajo, <strong>el depósito no será devuelto</strong> si el Cliente decide no continuar con la construcción, por cualquier motivo.",
+        p4:"<strong>Crédito al cierre.</strong> Si el Cliente continúa con la construcción, los <strong>$5,000</strong> completos se acreditan al 100% a la compra de la casa del Cliente a través del préstamo de construcción al cierre.",
+        p5:"Este Acuerdo confirma únicamente los términos del depósito. No constituye un contrato de construcción final, y no obliga a ninguna de las partes a un precio de construcción hasta que se firme por separado un contrato de construcción."
+      },
+      acks:[
+        "Entiendo que el <b>Depósito de Diseño y Planos de $5,000 NO ES REEMBOLSABLE</b> y no me será devuelto si decido no continuar.",
+        "Entiendo que este depósito se usa para pagar <b>mano de obra de planos y dibujo, comisión del representante de ventas y honorarios de la coordinadora de transacciones</b> — costos incurridos en mi nombre tan pronto como comienza el trabajo.",
+        "Entiendo que si continúo con la construcción, los <b>$5,000 completos se acreditarán a mi casa</b> a través del préstamo de construcción al cierre.",
+        "He leído este Acuerdo en su totalidad, firmo voluntariamente, y <b>consiento en firmar electrónicamente</b>."
+      ]
+    }
+  };
+
+  var lang = (new URLSearchParams(location.search).get("lang") === "es") ? "es" : "en";
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ------------------------------------------------------- signature pads */
+  function SigPad(canvas){
+    var ctx = canvas.getContext("2d"), drawing = false, dirty = false, last = null;
+    function size(){
+      var r = canvas.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+      var snap = dirty ? canvas.toDataURL() : null;
+      canvas.width = Math.round(r.width * d); canvas.height = Math.round(r.height * d);
+      ctx.setTransform(d,0,0,d,0,0);
+      ctx.lineWidth = 2.2; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#12233f";
+      if (snap){ var im = new Image(); im.onload = function(){ ctx.drawImage(im,0,0,r.width,r.height); }; im.src = snap; }
+    }
+    function pos(e){
+      var r = canvas.getBoundingClientRect();
+      return { x:e.clientX - r.left, y:e.clientY - r.top };
+    }
+    canvas.addEventListener("pointerdown", function(e){
+      e.preventDefault(); drawing = true; dirty = true; last = pos(e);
+      canvas.setPointerCapture(e.pointerId);
+      ctx.beginPath(); ctx.arc(last.x,last.y,1.1,0,Math.PI*2); ctx.fillStyle="#12233f"; ctx.fill();
+    });
+    canvas.addEventListener("pointermove", function(e){
+      if(!drawing) return;
+      e.preventDefault();
+      var p = pos(e);
+      ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke();
+      last = p;
+    });
+    ["pointerup","pointercancel","pointerleave"].forEach(function(ev){
+      canvas.addEventListener(ev, function(){ drawing = false; });
+    });
+    window.addEventListener("resize", size);
+    setTimeout(size, 0);
+    return {
+      clear:function(){ ctx.clearRect(0,0,canvas.width,canvas.height); dirty=false; },
+      isEmpty:function(){ return !dirty; },
+      data:function(){ return dirty ? canvas.toDataURL("image/png") : ""; },
+      resize:size
+    };
+  }
+
+  var pad   = SigPad($("sigPad"));
+  var coPad = SigPad($("coSigPad"));
+  $("clearSig").addEventListener("click", function(){ pad.clear(); });
+  $("clearCoSig").addEventListener("click", function(){ coPad.clear(); });
+
+  // drawing clears any outstanding "please sign" error state
+  $("sigPad").addEventListener("pointerdown", function(){
+    $("sigWrap").classList.remove("err");
+    clearErr();
+  });
+
+  var coOpen = false;
+  $("cosignToggle").addEventListener("click", function(){
+    coOpen = !coOpen;
+    $("cosignBlock").style.display = coOpen ? "block" : "none";
+    this.textContent = coOpen ? T[lang].removeCosign : T[lang].addCosign;
+    if (coOpen) setTimeout(coPad.resize, 0);
+  });
+
+  /* --------------------------------------------------------------- render */
+  function renderTerms(){
+    var t = T[lang].terms;
+    $("termsBox").innerHTML =
+      "<p>"+t.intro+"</p><p>"+t.p1+"</p><p>"+t.p2+"</p><ul><li>"+
+      t.li.join("</li><li>")+"</li></ul><p>"+t.p3+"</p><p>"+t.p4+"</p><p>"+t.p5+"</p>";
+  }
+
+  function renderAcks(){
+    var box = $("ackList");
+    var prev = Array.prototype.map.call(box.querySelectorAll("input"), function(i){ return i.checked; });
+    box.innerHTML = "";
+    T[lang].acks.forEach(function(text, i){
+      var lab = document.createElement("label");
+      lab.className = "ack";
+      lab.innerHTML = '<input type="checkbox" data-ack="'+i+'" /><span>'+text+'</span>';
+      var cb = lab.querySelector("input");
+      if (prev[i]) { cb.checked = true; lab.classList.add("checked"); }
+      cb.addEventListener("change", function(){
+        lab.classList.toggle("checked", cb.checked);
+        if (cb.checked) lab.classList.remove("err");
+      });
+      box.appendChild(lab);
+    });
+  }
+
+  function applyLang(){
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-t]").forEach(function(el){
+      var v = T[lang][el.getAttribute("data-t")];
+      if (v) el.textContent = v;
+    });
+    $("langBtn").textContent = (lang === "en") ? "🇲🇽 Español" : "🇺🇸 English";
+    $("cosignToggle").textContent = coOpen ? T[lang].removeCosign : T[lang].addCosign;
+    $("todayLabel").textContent = today();
+    document.title = "South Texas Builders — " + T[lang].docTitle;
+    renderTerms(); renderAcks();
+  }
+
+  function today(){
+    return new Date().toLocaleDateString(lang === "en" ? "en-US" : "es-MX",
+      { month:"long", day:"numeric", year:"numeric" });
+  }
+
+  $("langBtn").addEventListener("click", function(){
+    lang = (lang === "en") ? "es" : "en";
+    applyLang();
+  });
+
+  /* ------------------------------------------------------------ validation */
+  function showErr(msg){
+    var e = $("errMsg"); e.textContent = msg; e.classList.add("show");
+    e.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+  function clearErr(){ $("errMsg").classList.remove("show"); }
+
+  function validate(){
+    clearErr();
+    var required = ["legalName","phone","email","typedSig"];
+    var bad = false;
+    required.forEach(function(id){
+      var el = $(id), empty = !el.value.trim();
+      el.classList.toggle("err", empty);
+      if (empty) bad = true;
+    });
+    if (bad){ showErr(T[lang].errFields); return false; }
+
+    var boxes = $("ackList").querySelectorAll("input[type=checkbox]");
+    var allAck = true;
+    Array.prototype.forEach.call(boxes, function(cb){
+      var lab = cb.closest(".ack");
+      lab.classList.toggle("err", !cb.checked);
+      if (!cb.checked) allAck = false;
+    });
+    if (!allAck){ showErr(T[lang].errAck); return false; }
+
+    var norm = function(s){ return s.trim().toLowerCase().replace(/\s+/g," "); };
+    if (norm($("typedSig").value) !== norm($("legalName").value)){
+      $("typedSig").classList.add("err");
+      showErr(T[lang].errTyped); return false;
+    }
+
+    if (pad.isEmpty()){
+      $("sigWrap").classList.add("err");
+      showErr(T[lang].errSig); return false;
+    }
+    $("sigWrap").classList.remove("err");
+    return true;
+  }
+
+  /* ---------------------------------------------------------------- submit */
+  var record = null;
+
+  function makeDocId(){
+    var d = new Date();
+    var ymd = "" + d.getFullYear() +
+      String(d.getMonth()+1).padStart(2,"0") + String(d.getDate()).padStart(2,"0");
+    var rand = Math.random().toString(36).slice(2,6).toUpperCase();
+    return "STB-DA-" + ymd + "-" + rand;
+  }
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  $("submitBtn").addEventListener("click", function(){
+    if (!validate()) return;
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = T[lang].submitting;
+
+    var now = new Date();
+    record = {
+      documentId: makeDocId(),
+      legalName:  $("legalName").value.trim(),
+      phone:      $("phone").value.trim(),
+      email:      $("email").value.trim(),
+      property:   $("property").value.trim(),
+      package:    $("package").value.trim(),
+      rep:        $("rep").value.trim(),
+      typedSignature: $("typedSig").value.trim(),
+      coSignerName:   coOpen ? $("coName").value.trim() : "",
+      signatureImage:   pad.data(),
+      coSignatureImage: (coOpen && !coPad.isEmpty()) ? coPad.data() : "",
+      signedAt:   now.toISOString(),
+      signedAtLocal: now.toLocaleString(lang === "en" ? "en-US" : "es-MX"),
+      language:   lang,
+      acknowledgments: T[lang].acks.map(function(a){
+        return a.replace(/<[^>]+>/g,"");
+      }).join(" | "),
+      userAgent:  navigator.userAgent
+    };
+
+    var body = new URLSearchParams();
+    body.append("form-name", "stb-deposit-agreement");
+    Object.keys(record).forEach(function(k){ body.append(k, record[k]); });
+
+    fetch("/", {
+      method: "POST",
+      headers: {"Content-Type":"application/x-www-form-urlencoded"},
+      body: body.toString()
+    }).catch(function(){
+      // Netlify Forms unavailable (e.g. local preview) — the signed PDF is
+      // still generated so the signature is never lost.
+      console.warn("Form submission failed; PDF fallback still available.");
+    }).finally(function(){
+      $("formView").style.display = "none";
+      $("done").style.display = "block";
+      $("doneId").textContent = record.documentId;
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  });
+
+  /* ------------------------------------------------- signed document (PDF) */
+  function buildDoc(r){
+    var t = T[r.language];
+    var row = function(label, val){
+      if (!val) return "";
+      return '<div class="r"><span class="rl">'+esc(label)+'</span><span class="rv">'+esc(val)+'</span></div>';
+    };
+    var terms = t.terms;
+    return '<!DOCTYPE html><html lang="'+r.language+'"><head><meta charset="UTF-8">' +
+      '<title>'+esc(t.docHead)+' — '+esc(r.documentId)+'</title>' +
+      '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">' +
+      '<style>' +
+      '*{box-sizing:border-box;margin:0;padding:0}' +
+      'body{font-family:"IBM Plex Sans",sans-serif;background:#f5f0e8;color:#1a1a1a;padding:40px 20px;line-height:1.6}' +
+      '.d{max-width:700px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}' +
+      '.h{background:#0f1f3d;padding:26px 32px;display:flex;justify-content:space-between;align-items:center;' +
+        '-webkit-print-color-adjust:exact;print-color-adjust:exact}' +
+      '.lg{font-size:17px;font-weight:800;color:#fff;letter-spacing:.04em}.lg span{color:#b5291e}' +
+      '.ht{text-align:right}.ht h2{font-size:14px;color:#fff;font-weight:700}' +
+      '.ht p{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}' +
+      '.b{padding:30px 32px}' +
+      '.amt{background:#f7f4ee;border:1px solid #e0dbd2;border-radius:8px;padding:18px 22px;display:flex;' +
+        'justify-content:space-between;align-items:center;margin-bottom:24px}' +
+      '.al{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#888}' +
+      '.av{font-size:32px;font-weight:800;color:#0f1f3d}' +
+      '.at{font-size:11px;font-weight:600;color:#b5291e;background:#f8ece9;border:1px solid #f0c0ba;' +
+        'padding:4px 12px;border-radius:20px;-webkit-print-color-adjust:exact;print-color-adjust:exact}' +
+      '.st{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#0f1f3d;' +
+        'border-bottom:2px solid #e6e1d8;padding-bottom:6px;margin:26px 0 14px}' +
+      '.r{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid #f2f0ec}' +
+      '.rl{font-size:11.5px;color:#888;flex:none}.rv{font-size:11.5px;font-weight:600;text-align:right}' +
+      '.tx{font-size:12px;color:#3a3a3a}.tx p{margin-bottom:10px}.tx ul{margin:8px 0 10px 20px}' +
+      '.tx li{margin-bottom:4px}.tx .hot{color:#b5291e;font-weight:700}' +
+      '.ack{font-size:11.5px;color:#3a3a3a;padding:7px 0 7px 22px;position:relative;border-bottom:1px solid #f5f3ef}' +
+      '.ack:before{content:"\\2713";position:absolute;left:0;top:7px;color:#1e7a4d;font-weight:700}' +
+      '.sg{display:flex;gap:26px;margin-top:8px;flex-wrap:wrap}' +
+      '.sgb{flex:1;min-width:230px}' +
+      '.sgi{height:80px;border-bottom:1.5px solid #1a1a1a;display:flex;align-items:flex-end;padding-bottom:2px}' +
+      '.sgi img{max-height:78px;max-width:100%}' +
+      '.sgn{font-size:11px;font-weight:700;margin-top:6px}' +
+      '.sgm{font-size:10px;color:#999;margin-top:2px}' +
+      '.aud{background:#faf9f6;border:1px solid #eee;border-radius:6px;padding:12px 16px;margin-top:22px;' +
+        'font-size:9.5px;color:#999;line-height:1.7;word-break:break-word}' +
+      '.f{padding:18px 32px;background:#faf9f6;border-top:1px solid #f0f0f0;text-align:center;' +
+        'font-size:10.5px;color:#aaa;line-height:1.8}' +
+      '@media print{body{background:#fff;padding:0}.d{box-shadow:none;border-radius:0}}' +
+      '</style></head><body><div class="d">' +
+      '<div class="h"><div class="lg">SOUTH TEXAS <span>BUILDERS</span></div>' +
+      '<div class="ht"><h2>'+esc(t.docHead)+'</h2><p>'+esc(r.documentId)+'</p></div></div>' +
+      '<div class="b">' +
+      '<div class="amt"><div><div class="al">'+esc(t.depositAmount)+'</div><div class="av">$5,000</div></div>' +
+      '<div class="at">'+esc(t.creditedTag)+'</div></div>' +
+
+      '<div class="st">'+esc(t.s1)+'</div>' +
+      row(t.labClient, r.legalName) + row(t.labPhone, r.phone) + row(t.labEmail, r.email) +
+      row(t.labProp, r.property) + row(t.labPkg, r.package) + row(t.labRep, r.rep) +
+      row(t.labBuilder, "South Texas Builders") + row(t.labDate, r.signedAtLocal) +
+
+      '<div class="st">'+esc(t.termsHead)+'</div><div class="tx">' +
+      '<p>'+terms.intro+'</p><p>'+terms.p1+'</p><p>'+terms.p2+'</p>' +
+      '<ul><li>'+terms.li.join("</li><li>")+'</li></ul>' +
+      '<p>'+terms.p3+'</p><p>'+terms.p4+'</p><p>'+terms.p5+'</p></div>' +
+
+      '<div class="st">'+esc(t.s3)+'</div>' +
+      T[r.language].acks.map(function(a){
+        return '<div class="ack">'+a+'</div>';
+      }).join("") +
+
+      '<div class="st">'+esc(t.sigHead)+'</div><div class="sg">' +
+      '<div class="sgb"><div class="sgi">' +
+        (r.signatureImage ? '<img src="'+r.signatureImage+'" alt="signature" />' : '') +
+      '</div><div class="sgn">'+esc(r.legalName)+'</div>' +
+      '<div class="sgm">'+esc(t.sigLine)+' · '+esc(t.onDate)+' '+esc(r.signedAtLocal)+'</div></div>' +
+      (r.coSignerName ?
+        '<div class="sgb"><div class="sgi">' +
+        (r.coSignatureImage ? '<img src="'+r.coSignatureImage+'" alt="co-signature" />' : '') +
+        '</div><div class="sgn">'+esc(r.coSignerName)+'</div>' +
+        '<div class="sgm">'+esc(t.coSigLine)+' · '+esc(t.onDate)+' '+esc(r.signedAtLocal)+'</div></div>'
+        : '') +
+      '</div>' +
+
+      '<div class="aud"><strong>'+esc(t.auditHead)+'</strong><br/>' +
+      esc(t.labDoc)+': '+esc(r.documentId)+'<br/>' +
+      'Timestamp (UTC): '+esc(r.signedAt)+'<br/>' +
+      'Typed signature: '+esc(r.typedSignature)+'<br/>' +
+      'Language: '+esc(r.language)+'<br/>' +
+      'Client agent: '+esc(r.userAgent)+'</div>' +
+
+      '</div><div class="f">South Texas Builders · 1500 Dove Ave W, Suite #20 · McAllen, TX 78504 · (956) 594-6936<br/>' +
+      esc(t.footNote)+'</div></div>' +
+      '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},700);}<\/scr'+'ipt>' +
+      '</body></html>';
+  }
+
+  $("printBtn").addEventListener("click", function(){
+    if (!record) return;
+    var blob = new Blob([buildDoc(record)], {type:"text/html"});
+    var url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 15000);
+  });
+
+  /* --------------------------------------------------------------- kickoff */
+  ["legalName","phone","email","typedSig"].forEach(function(id){
+    $(id).addEventListener("input", function(){ this.classList.remove("err"); });
+  });
+  applyLang();
+})();
+</script>
+</body>
+</html>
