@@ -187,11 +187,7 @@
             <span class="f-label" data-t="fProp">Property Address / Lot (if known)</span>
             <input type="text" id="property" placeholder="e.g. Lot 14, Palm Grove, Alice TX" />
           </label>
-          <label class="f">
-            <span class="f-label" data-t="fPkg">Selected Package</span>
-            <input type="text" id="package" placeholder="e.g. Fully Loaded — $120/sq ft" />
-          </label>
-          <label class="f">
+          <label class="f full">
             <span class="f-label" data-t="fRep">Sales Representative</span>
             <input type="text" id="rep" placeholder="e.g. Rolando Peña" />
           </label>
@@ -277,7 +273,7 @@
   <input type="text" name="bot-field" />
   <input type="text" name="documentId" /><input type="text" name="legalName" />
   <input type="text" name="phone" /><input type="email" name="email" />
-  <input type="text" name="property" /><input type="text" name="package" />
+  <input type="text" name="property" />
   <input type="text" name="rep" /><input type="text" name="typedSignature" />
   <input type="text" name="coSignerName" /><input type="text" name="signedAt" />
   <input type="text" name="language" /><input type="text" name="acknowledgments" />
@@ -296,7 +292,7 @@
       creditedTag:"Credited to Your Home at Closing",
       s1:"Client Information", s2:"Deposit Terms", s3:"Acknowledgment", s4:"Signature",
       fLegal:"Full Legal Name", fPhone:"Phone", fEmail:"Email",
-      fProp:"Property Address / Lot (if known)", fPkg:"Selected Package", fRep:"Sales Representative",
+      fProp:"Property Address / Lot (if known)", fRep:"Sales Representative",
       fType:"Type your full legal name to sign", sigHint:"Draw your signature below",
       sigHint2:"Co-signer draws signature below", clearSig:"Clear", clearSig2:"Clear",
       sigLine:"Client Signature", coSigLine:"Co-Signer Signature",
@@ -314,7 +310,7 @@
       errSend:"Your agreement was signed, but the copy could not be sent automatically. Please download the PDF and email it to the office.",
       /* document */
       docHead:"Design & Blueprint Deposit Agreement", labClient:"Client", labPhone:"Phone",
-      labEmail:"Email", labProp:"Property", labPkg:"Package", labRep:"Sales Representative",
+      labEmail:"Email", labProp:"Property", labRep:"Sales Representative",
       labDate:"Date Signed", labDoc:"Document ID", labBuilder:"Builder",
       termsHead:"Terms Acknowledged & Agreed", sigHead:"Signatures",
       signedBy:"Signed by", coSignedBy:"Co-signed by", onDate:"on",
@@ -340,7 +336,7 @@
       creditedTag:"Acreditado a Tu Casa al Cierre",
       s1:"Información del Cliente", s2:"Términos del Depósito", s3:"Reconocimiento", s4:"Firma",
       fLegal:"Nombre Legal Completo", fPhone:"Teléfono", fEmail:"Correo Electrónico",
-      fProp:"Dirección / Lote de la Propiedad (si se conoce)", fPkg:"Paquete Seleccionado",
+      fProp:"Dirección / Lote de la Propiedad (si se conoce)",
       fRep:"Representante de Ventas",
       fType:"Escribe tu nombre legal completo para firmar", sigHint:"Dibuja tu firma abajo",
       sigHint2:"El co-firmante dibuja su firma abajo", clearSig:"Borrar", clearSig2:"Borrar",
@@ -358,7 +354,7 @@
       errTyped:"Tu nombre escrito debe coincidir con tu nombre legal completo.",
       errSend:"Tu acuerdo fue firmado, pero la copia no se pudo enviar automáticamente. Por favor descarga el PDF y envíalo por correo a la oficina.",
       docHead:"Acuerdo de Depósito de Diseño y Planos", labClient:"Cliente", labPhone:"Teléfono",
-      labEmail:"Correo", labProp:"Propiedad", labPkg:"Paquete", labRep:"Representante de Ventas",
+      labEmail:"Correo", labProp:"Propiedad", labRep:"Representante de Ventas",
       labDate:"Fecha de Firma", labDoc:"ID del Documento", labBuilder:"Constructor",
       termsHead:"Términos Reconocidos y Aceptados", sigHead:"Firmas",
       signedBy:"Firmado por", coSignedBy:"Co-firmado por", onDate:"el",
@@ -563,7 +559,6 @@
       phone:      $("phone").value.trim(),
       email:      $("email").value.trim(),
       property:   $("property").value.trim(),
-      package:    $("package").value.trim(),
       rep:        $("rep").value.trim(),
       typedSignature: $("typedSig").value.trim(),
       coSignerName:   coOpen ? $("coName").value.trim() : "",
@@ -653,7 +648,7 @@
 
       '<div class="st">'+esc(t.s1)+'</div>' +
       row(t.labClient, r.legalName) + row(t.labPhone, r.phone) + row(t.labEmail, r.email) +
-      row(t.labProp, r.property) + row(t.labPkg, r.package) + row(t.labRep, r.rep) +
+      row(t.labProp, r.property) + row(t.labRep, r.rep) +
       row(t.labBuilder, "South Texas Builders") + row(t.labDate, r.signedAtLocal) +
 
       '<div class="st">'+esc(t.termsHead)+'</div><div class="tx">' +
